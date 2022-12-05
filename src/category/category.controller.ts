@@ -8,7 +8,7 @@ export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
   @Post()
-  createPost(
+  createCategory(
     @Body('name') name: string,
     @Body('description') description: string,
     @Body('type') type: string,

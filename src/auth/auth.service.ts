@@ -56,6 +56,7 @@ export class AuthService {
     if (!user) return null;
 
     const jwt = await this.jwtService.signAsync({ user });
-    return { token: jwt };
+
+    return { ...user, token: jwt };
   }
 }

@@ -13,8 +13,14 @@ export class UserService {
       id: user._id,
       name: user.name,
       email: user.email,
-      phone: user.phone
+      phone: user.phone,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     }
+  }
+
+  async find(id: string): Promise<UserDocument> {
+    return this.userModel.findById(id).exec();
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {
@@ -40,4 +46,19 @@ export class UserService {
     const newUser = new this.userModel({name, email, password: hashedPassword, phone});
     return newUser.save();
   }
+
+  async update(
+    id: string,
+    name: string,
+    email: string,
+    phone: string
+  ): Promise<UserDocument> {
+    let existUser = await this.find(id);
+    existUser.name = name ?? existUser.name;
+    existUser.email = email ?? existUser.email;
+    existUser.phone = phone ?? existUser.phone;
+
+    return existUser.save();
+  }
+
 }

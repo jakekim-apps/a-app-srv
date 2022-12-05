@@ -5,13 +5,21 @@ import { CategoryModule } from './category/category.module';
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { CardModule } from './card/card.module';
+import { AccountModule } from './account/account.module';
+import { HistoryModule } from './history/history.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/a-app'),
     CategoryModule,
     UserModule,
-    AuthModule],
+    AuthModule,
+    CardModule,
+    AccountModule,
+    HistoryModule,
+    DashboardModule],
   controllers: [AppController],
   providers: [AppService],
 })
