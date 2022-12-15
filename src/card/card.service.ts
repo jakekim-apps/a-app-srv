@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { CardDocument } from "./card.schema";
 import { Model } from "mongoose";
@@ -33,11 +33,20 @@ export class CardService {
     return this._getCardDetails(card);
   }
 
+  async findByCardNumber(number: string): Promise<CardDocument | null> {
+    return this.cardModel.findOne({number}).exec();
+  }
+
   async create(
     name: string,
     number: string,
     description: string
   ): Promise<CardDocument> {
+
+    const existingNumber = await this.findByCardNumber(number);
+    if (existingNumber)
+      throw new BadRequestException('Exist Card Number');
+
     const newCard = new this.cardModel({name, number, description});
     return newCard.save();
   }

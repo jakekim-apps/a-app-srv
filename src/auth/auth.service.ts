@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import { UserService } from "../user/user.service";
 
 import * as bcrypt from 'bcrypt';
@@ -22,9 +22,11 @@ export class AuthService {
     const { name, email, password, phone } = user;
 
     const existingEmail = await this.userService.findByEmail(email);
-    if (existingEmail) return 'Email taken!';
+    if (existingEmail)
+      throw new BadRequestException( 'Email taken!');
     const existingPhone = await this.userService.findByPhone(phone);
-    if (existingPhone) return 'Phone taken!';
+    if (existingPhone)
+      throw new BadRequestException( 'Phone number taken!');
 
     const hashedPassword = await this.hashPassword(password);
 
@@ -40,11 +42,13 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
     const doseUserExist = !!user;
 
-    if (!doseUserExist) return null;
+    if (!doseUserExist)
+        throw new BadRequestException( 'Not registered email');
 
     const dosePasswordMatch = await this.dosePasswordMatch(password, user.password);
 
-    if (!dosePasswordMatch) return null;
+    if (!dosePasswordMatch)
+        throw new BadRequestException( 'Email or Password not corrected');
 
     return this.userService._getUserDetails(user);
   }
@@ -57,6 +61,6 @@ export class AuthService {
 
     const jwt = await this.jwtService.signAsync({ user });
 
-    return { ...user, token: jwt };
+    return { token: jwt };
   }
 }
