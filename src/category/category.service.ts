@@ -1,14 +1,15 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { CategoryDocument } from "./category.schema";
-import { Model } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { CategoryDetails } from "./category-details.interface";
+import { PaginateModel } from 'mongoose';
+import { paginationLabels } from "../utils/pagination.interface";
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectModel('Category')
-    private readonly categoryModel: Model<CategoryDocument>,
+    private readonly categoryModel: PaginateModel<CategoryDocument>,
   ) {}
 
   _getCategoryDetails(category: CategoryDocument): CategoryDetails {
@@ -22,8 +23,8 @@ export class CategoryService {
     }
   }
 
-  async findAll(): Promise<CategoryDocument[]> {
-    return this.categoryModel.find().exec();
+  async findAll() {
+    return this.categoryModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
   }
 
   async find(id: string): Promise<CategoryDocument> {

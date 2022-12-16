@@ -1,12 +1,13 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { CardDocument } from "./card.schema";
-import { Model } from "mongoose";
 import { CardDetails } from "./card-details.interface";
+import { PaginateModel } from 'mongoose';
+import { paginationLabels } from "../utils/pagination.interface";
 
 @Injectable()
 export class CardService {
-  constructor(@InjectModel('Card') private readonly cardModel: Model<CardDocument>) {}
+  constructor(@InjectModel('Card') private readonly cardModel: PaginateModel<CardDocument>) {}
 
   _getCardDetails(card: CardDocument): CardDetails {
     return {
@@ -19,8 +20,11 @@ export class CardService {
     }
   }
 
-  async findAll(): Promise<CardDocument[]> {
-    return this.cardModel.find().exec();
+  async findAll() {
+    // keyword, name, page,
+    // const cards = this.cardModel.find().exec();
+    // return this.cardModel.find().exec();
+    return this.cardModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
   }
 
   async find(id: string): Promise<CardDocument> {

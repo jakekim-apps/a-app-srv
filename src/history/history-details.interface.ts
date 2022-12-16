@@ -3,7 +3,8 @@ export interface HistoryDetails {
   date: Date,
   amount: number,
   type: string,
-  spendingType: string,
+  targetType: string,
+  targetId: string,
   description: string,
   categoryId: string,
   createdAt: Date;

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Schema as mongooseSchema } from "mongoose";
-
+import * as mongoosePaginate from "mongoose-paginate-v2";
 
 export enum CategoryType {
   ALL,
@@ -26,4 +26,6 @@ export class Category {
   updatedAt: Date;
 }
 
-export const CategorySchema = SchemaFactory.createForClass(Category);
+const schema = SchemaFactory.createForClass(Category);
+schema.plugin(mongoosePaginate);
+export const CategorySchema = schema;

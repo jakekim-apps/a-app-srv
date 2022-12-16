@@ -17,7 +17,7 @@ export class AccountController {
   }
 
   @Get()
-  findAllAccounts(): Promise<AccountDocument[]> {
+  findAllAccounts() {
     return this.accountService.findAll();
   }
 

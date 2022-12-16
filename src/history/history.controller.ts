@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { HistoryService } from "./history.service";
 import { HistoryDocument } from "./history.schema";
 
@@ -11,16 +11,22 @@ export class HistoryController {
     @Body('date') date: Date,
     @Body('amount') amount: number,
     @Body('type') type: string,
-    @Body('spendingType') spendingType: string,
+    @Body('targetType') targetType: string,
+    @Body('targetId') targetId: string,
     @Body('description') description: string,
     @Body('categoryId') categoryId: string
   ): Promise<HistoryDocument> {
-    return this.historyService.create(date, amount, type, spendingType, description, categoryId);
+    return this.historyService.create(date, amount, type, targetType, targetId, description, categoryId);
   }
 
   @Get()
-  findAllHistories(): Promise<HistoryDocument[]> {
-    return this.historyService.findAll();
+  findAllHistories(
+    @Query() query
+  ) {
+    console.log(query)
+    // page, size, text, type, targetType, targetId, categoryId, period
+
+    return this.historyService.findAll(query);
   }
 
   @Get(':id')
@@ -34,11 +40,12 @@ export class HistoryController {
     @Body('date') date: Date,
     @Body('amount') amount: number,
     @Body('type') type: string,
-    @Body('spendingType') spendingType: string,
+    @Body('targetType') targetType: string,
+    @Body('targetId') targetId: string,
     @Body('description') description: string,
     @Body('categoryId') categoryId: string
   ): Promise<HistoryDocument> {
-    return this.historyService.update(id, amount, type, spendingType, description, categoryId);
+    return this.historyService.update(id, amount, type, targetType, targetId, description, categoryId);
   }
 
   @Delete(':id')

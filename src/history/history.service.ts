@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
-import { HistoryDocument } from "./history.schema";
-import { Model } from "mongoose";
+import { HistoryDocument, TargetType } from "./history.schema";
+import { Model, PaginateModel } from "mongoose";
 import { HistoryDetails } from "./history-details.interface";
+import { paginationLabels } from "../utils/pagination.interface";
+import { AccountService } from "../account/account.service";
 
 @Injectable()
 export class HistoryService {
-  constructor(@InjectModel('History') private readonly historyModel: Model<HistoryDocument>) {}
+  constructor(
+    @InjectModel('History') private readonly historyModel: PaginateModel<HistoryDocument>,
+    private accountService: AccountService
+  ) {}
 
   _getHistoryDetails(history: HistoryDocument): HistoryDetails {
     return {
@@ -14,7 +19,8 @@ export class HistoryService {
       date: history.date,
       amount: history.amount,
       type: history.type,
-      spendingType: history.spendingType,
+      targetType: history.targetType,
+      targetId: history.targetId,
       description: history.description,
       categoryId: history.categoryId,
       createdAt: history.createdAt,
@@ -25,8 +31,44 @@ export class HistoryService {
   // TODO query_params
   // With Sort
   // type, spendingType, categoryId, date
-  async findAll(): Promise<HistoryDocument[]> {
-    return this.historyModel.find().exec();
+  async findAll(queryParams) {
+    const {
+      page,
+      size,
+      type,
+      targetType,
+      targetId,
+      categoryId,
+      startDate,
+      endDate,
+      keyword
+    } = queryParams;
+
+    let query: any = {};
+    if (type) query.type = type;
+    if (targetType) query.targetType = targetType;
+    if (targetId) query.targetId = targetId;
+    if (categoryId) query.categoryId = categoryId;
+    if (startDate && endDate) {
+      query.createdAt = {
+        $gte: startDate,
+        $lte: endDate
+      }
+    }
+    return this.historyModel.paginate(
+      {
+        ...query
+      },
+      {
+        page: page,
+        limit: size,
+        sort:
+          {
+            createdAt: -1
+          },
+        customLabels: paginationLabels
+      }
+    )
   }
 
   async find(id: string): Promise<HistoryDocument> {
@@ -43,11 +85,15 @@ export class HistoryService {
     date: Date,
     amount: number,
     type: string,
-    spendingType: string,
+    targetType: string,
+    targetId: string,
     description: string,
     categoryId: string
   ): Promise<HistoryDocument> {
-    const newHistory = new this.historyModel({date, amount, type, spendingType, description, categoryId});
+    if (targetType === "1") {
+      await this.accountService.updateBalance(targetId, type, amount);
+    }
+    const newHistory = new this.historyModel({date, amount, type, targetType, targetId, description, categoryId});
     return newHistory.save();
   }
 
@@ -55,14 +101,16 @@ export class HistoryService {
     id: string,
     amount: number,
     type: string,
-    spendingType: string,
+    targetType: string,
+    targetId: string,
     description: string,
     categoryId: string
   ): Promise<HistoryDocument> {
     let existHistory = await this.find(id);
     existHistory.amount = amount ?? existHistory.amount;
     existHistory.type = type ?? existHistory.type;
-    existHistory.spendingType = spendingType ?? existHistory.spendingType;
+    existHistory.targetType = targetType ?? existHistory.targetType;
+    existHistory.targetId = targetId ?? existHistory.targetId;
     existHistory.description = description ?? existHistory.description;
     existHistory.categoryId = categoryId ?? existHistory.categoryId;
 

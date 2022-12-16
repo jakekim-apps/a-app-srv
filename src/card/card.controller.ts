@@ -16,7 +16,7 @@ export class CardController {
   }
 
   @Get()
-  findAllCards(): Promise<CardDocument[]> {
+  findAllCards() {
     return this.cardService.findAll();
   }
 

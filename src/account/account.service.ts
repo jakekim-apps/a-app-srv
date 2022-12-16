@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { AccountDocument } from "./account.schema";
-import { Model } from "mongoose";
+import { PaginateModel } from "mongoose";
 import { AccountDetails } from "./account-details.interface";
+import { paginationLabels } from "../utils/pagination.interface";
 
 @Injectable()
 export class AccountService {
-  constructor(@InjectModel('Account') private readonly accountModel: Model<AccountDocument>) {}
+  constructor(@InjectModel('Account') private readonly accountModel: PaginateModel<AccountDocument>) {}
 
   _getAccountDetails(account: AccountDocument): AccountDetails {
     return {
@@ -20,8 +21,8 @@ export class AccountService {
     }
   }
 
-  async findAll(): Promise<AccountDocument[]> {
-    return this.accountModel.find().exec();
+  async findAll() {
+    return this.accountModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
   }
 
   async find(id: string): Promise<AccountDocument> {
@@ -66,6 +67,23 @@ export class AccountService {
 
   async deleteAll(idList: string[]) {
     return this.accountModel.deleteMany({_id:{$in: idList}});
+  }
+
+  async updateBalance(
+    id: string,
+    type: string,
+    amount: number
+  ): Promise<AccountDocument> {
+    let existAccount = await this.find(id);
+    let balance = existAccount.balance;
+    if (type === '0') {
+      balance += amount;
+    } else {
+      balance -= amount;
+    }
+    existAccount.balance = balance;
+
+    return existAccount.save();
   }
 
 }

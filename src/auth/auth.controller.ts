@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, HttpCode, HttpException, HttpStatus, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { NewUserDto } from "../user/dtos/new-user.dto";
 import { UserDetails } from "../user/user-details.interface";
@@ -9,10 +9,11 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
+  @HttpCode(HttpStatus.OK)
   register(
     @Body() user: NewUserDto
   ): Promise<UserDetails | null> {
-    return this.authService.register(user);
+      return this.authService.register(user);
   }
 
   @Post('login')

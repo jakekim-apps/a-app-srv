@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 
 import * as bcrypt from 'bcrypt';
@@ -23,10 +23,10 @@ export class AuthService {
 
     const existingEmail = await this.userService.findByEmail(email);
     if (existingEmail)
-      throw new BadRequestException( 'Email taken!');
+      throw new BadRequestException(`email: ${email} 은 이미 등록된 email 입니다.`);
     const existingPhone = await this.userService.findByPhone(phone);
     if (existingPhone)
-      throw new BadRequestException( 'Phone number taken!');
+      throw new BadRequestException(`phone: ${phone} 은 이미 등록된 phone 입니다.`);
 
     const hashedPassword = await this.hashPassword(password);
 
@@ -57,7 +57,8 @@ export class AuthService {
     const {email, password} = existingUser;
     const user = await this.validateUser(email, password);
 
-    if (!user) return null;
+    if (!user)
+      throw new BadRequestException(`email 또는 password가 잘못되었습니다.`);
 
     const jwt = await this.jwtService.signAsync({ user });
 

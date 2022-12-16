@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Schema as mongooseSchema } from "mongoose";
 import { Document } from "mongoose";
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 export type CardDocument = Card & Document;
 
@@ -20,4 +21,6 @@ export class Card {
   updatedAt: Date;
 }
 
-export const CardSchema = SchemaFactory.createForClass(Card);
+const schema = SchemaFactory.createForClass(Card);
+schema.plugin(mongoosePaginate);
+export const CardSchema = schema;

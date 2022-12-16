@@ -8,18 +8,20 @@ import { AuthModule } from './auth/auth.module';
 import { CardModule } from './card/card.module';
 import { AccountModule } from './account/account.module';
 import { HistoryModule } from './history/history.module';
-// import { DashboardModule } from './dashboard/dashboard.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { LoggerMiddleware } from "./core/logger.middleware";
+
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/a-app'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/a-app', {loggerLevel: "debug"}),
     CategoryModule,
     UserModule,
     AuthModule,
     CardModule,
     AccountModule,
     HistoryModule,
-  ],
+    DashboardModule],
   controllers: [AppController],
   providers: [AppService],
 })

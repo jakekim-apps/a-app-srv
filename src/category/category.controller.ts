@@ -17,7 +17,7 @@ export class CategoryController {
   }
 
   @Get()
-  findAllCategories(): Promise<CategoryDocument[]> {
+  findAllCategories() {
     return this.categoryService.findAll();
   }
 

@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Schema as mongooseSchema } from "mongoose";
+import * as mongoosePaginate from "mongoose-paginate-v2";
 
 export enum HistoryType {
   REVENUE,
   SPENDING
 }
 
-export enum SpendingType {
+export enum TargetType {
   CARD,
   ACCOUNT,
   CASH
@@ -24,8 +25,10 @@ export class History {
   amount: number;
   @Prop({type: String, enum: HistoryType})
   type: string;
-  @Prop({required: true, enum: SpendingType})
-  spendingType: string
+  @Prop({required: true, enum: TargetType})
+  targetType: string
+  @Prop()
+  targetId: string
   @Prop({required: true})
   description: string;
   @Prop()
@@ -36,4 +39,6 @@ export class History {
   updatedAt: Date;
 }
 
-export const HistorySchema = SchemaFactory.createForClass(History);
+const schema = SchemaFactory.createForClass(History);
+schema.plugin(mongoosePaginate);
+export const HistorySchema = schema;
