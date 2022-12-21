@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { UserDocument } from "./user.schema";
-import { Model } from "mongoose";
+import { PaginateModel } from "mongoose";
 import { UserDetails } from "./user-details.interface";
+import { paginationLabels } from "../utils/pagination.interface";
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<UserDocument>) {}
+  constructor(@InjectModel('User') private readonly userModel: PaginateModel<UserDocument>) {}
 
   _getUserDetails(user: UserDocument): UserDetails {
     return {
@@ -17,6 +18,10 @@ export class UserService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     }
+  }
+
+  async findAll() {
+    return this.userModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
   }
 
   async find(id: string): Promise<UserDocument> {

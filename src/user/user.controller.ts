@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Query } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserDetails } from "./user-details.interface";
 import { UserDocument } from "./user.schema";
@@ -7,6 +7,13 @@ import { UserDocument } from "./user.schema";
 export class UserController {
 
   constructor(private userService: UserService) {}
+
+  @Get()
+  getUsers(
+    @Query() query
+  ) {
+    return this.userService.findAll();
+  }
 
   @Get(':id')
   getUser(@Param('id') id: string): Promise<UserDetails | null> {
