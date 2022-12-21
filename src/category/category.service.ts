@@ -24,7 +24,7 @@ export class CategoryService {
   }
 
   async findAll() {
-    return this.categoryModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
+    return this.categoryModel.paginate({}, {page: 1, limit: 100, sort: {createdAt: -1}, customLabels: paginationLabels})
   }
 
   async find(id: string): Promise<CategoryDocument> {
@@ -56,5 +56,9 @@ export class CategoryService {
 
   async delete(id: string) {
     return this.categoryModel.deleteOne({ _id: id }).exec();
+  }
+
+  async deleteAll(idList: string[]) {
+    return this.categoryModel.deleteMany({_id:{$in: idList}});
   }
 }

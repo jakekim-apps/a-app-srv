@@ -44,4 +44,11 @@ export class CategoryController {
     return this.categoryService.delete(id);
   }
 
+  @Delete()
+  deleteCategories(
+      @Body('idList') idList: string[]
+  ) {
+    return this.categoryService.deleteAll(idList)
+  }
+
 }
