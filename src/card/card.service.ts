@@ -20,11 +20,20 @@ export class CardService {
     }
   }
 
-  async findAll() {
-    // keyword, name, page,
-    // const cards = this.cardModel.find().exec();
-    // return this.cardModel.find().exec();
-    return this.cardModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
+  async findAll(queryParams) {
+    const { page, size, keyword } = queryParams;
+    return this.cardModel.paginate(
+      {},
+      {
+        page: page,
+        limit: size,
+        sort:
+          {
+            createdAt: -1
+          },
+        customLabels: paginationLabels
+      }
+    )
   }
 
   async find(id: string): Promise<CardDocument> {

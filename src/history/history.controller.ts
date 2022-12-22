@@ -23,9 +23,6 @@ export class HistoryController {
   findAllHistories(
     @Query() query
   ) {
-    console.log(query)
-    // page, size, text, type, targetType, targetId, categoryId, period
-
     return this.historyService.findAll(query);
   }
 

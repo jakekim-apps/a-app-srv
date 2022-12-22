@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import { CategoryDocument } from "./category.schema";
 import { JwtGuard } from "../auth/guards/jwt.guard";
@@ -17,8 +17,10 @@ export class CategoryController {
   }
 
   @Get()
-  findAllCategories() {
-    return this.categoryService.findAll();
+  findAllCategories(
+    @Query() query
+  ) {
+    return this.categoryService.findAll(query);
   }
 
   @UseGuards(JwtGuard)

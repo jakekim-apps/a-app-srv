@@ -12,7 +12,7 @@ export class UserController {
   getUsers(
     @Query() query
   ) {
-    return this.userService.findAll();
+    return this.userService.findAll(query);
   }
 
   @Get(':id')

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { AccountDocument } from "./account.schema";
 
@@ -17,8 +17,10 @@ export class AccountController {
   }
 
   @Get()
-  findAllAccounts() {
-    return this.accountService.findAll();
+  findAllAccounts(
+    @Query() query
+  ) {
+    return this.accountService.findAll(query);
   }
 
   @Get(':id')

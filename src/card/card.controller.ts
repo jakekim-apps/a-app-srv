@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { CardService } from "./card.service";
 import { CardDocument } from "./card.schema";
 
@@ -16,8 +16,10 @@ export class CardController {
   }
 
   @Get()
-  findAllCards() {
-    return this.cardService.findAll();
+  findAllCards(
+    @Query() query
+  ) {
+    return this.cardService.findAll(query);
   }
 
   @Get(':id')

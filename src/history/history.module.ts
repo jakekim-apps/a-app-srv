@@ -13,6 +13,7 @@ import { AccountModule } from "../account/account.module";
     AccountModule
   ],
   controllers: [HistoryController],
-  providers: [HistoryService]
+  providers: [HistoryService],
+  exports: [HistoryService]
 })
 export class HistoryModule {}

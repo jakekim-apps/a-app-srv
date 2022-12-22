@@ -20,8 +20,22 @@ export class UserService {
     }
   }
 
-  async findAll() {
-    return this.userModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
+  async findAll(queryParams) {
+    const {
+      page, size, keyword
+    } = queryParams;
+
+    return this.userModel.paginate(
+      {},
+      {
+        page: page,
+        limit: size,
+        sort: {
+          createdAt: -1
+        },
+        customLabels: paginationLabels
+      }
+    )
   }
 
   async find(id: string): Promise<UserDocument> {

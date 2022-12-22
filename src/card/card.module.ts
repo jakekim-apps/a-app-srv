@@ -9,6 +9,7 @@ import { CardSchema } from "./card.schema";
     MongooseModule.forFeature([{ name: 'Card', schema: CardSchema }])
   ],
   providers: [CardService],
-  controllers: [CardController]
+  controllers: [CardController],
+  exports: [CardService]
 })
 export class CardModule {}

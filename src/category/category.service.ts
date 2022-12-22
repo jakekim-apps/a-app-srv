@@ -23,8 +23,20 @@ export class CategoryService {
     }
   }
 
-  async findAll() {
-    return this.categoryModel.paginate({}, {page: 1, limit: 100, sort: {createdAt: -1}, customLabels: paginationLabels})
+  async findAll(queryParams) {
+    const { page, size, keyword } = queryParams;
+    return this.categoryModel.paginate(
+      {},
+      {
+        page: page,
+        limit: size,
+        sort:
+          {
+            createdAt: -1
+          },
+        customLabels: paginationLabels
+      }
+    )
   }
 
   async find(id: string): Promise<CategoryDocument> {

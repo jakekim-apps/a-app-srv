@@ -21,8 +21,20 @@ export class AccountService {
     }
   }
 
-  async findAll() {
-    return this.accountModel.paginate({}, {page: 1, limit: 10, sort: {createdAt: -1}, customLabels: paginationLabels})
+  async findAll(queryParams) {
+    const { page, size, keyword } = queryParams;
+    return this.accountModel.paginate(
+      {},
+      {
+        page: page,
+        limit: size,
+        sort:
+          {
+            createdAt: -1
+          },
+        customLabels: paginationLabels
+      }
+    )
   }
 
   async find(id: string): Promise<AccountDocument> {
