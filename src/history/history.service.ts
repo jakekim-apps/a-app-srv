@@ -125,4 +125,28 @@ export class HistoryService {
     return this.historyModel.deleteMany({_id: {$in: idList}});
   }
 
+  async getTotalSummary() {
+    return this.historyModel.aggregate([
+      {
+        $group: {_id: "$type", total: {$sum: "$amount"}}
+      }
+    ])
+  }
+
+  async getCategorySummary() {
+    return this.historyModel.aggregate([
+      {
+        $group: {_id: "$categoryId", total: {$sum: "$amount"}}
+      }
+    ])
+  }
+
+  async getTypeSummary() {
+    return this.historyModel.aggregate([
+      {
+        $group: {_id: "$targetId", total: {$sum: "$amount"}}
+      }
+    ])
+  }
+
 }

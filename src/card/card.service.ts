@@ -86,4 +86,8 @@ export class CardService {
     return this.cardModel.deleteMany({_id:{$in: idList}});
   }
 
+  // async getSummary() {
+  //   return this.cardModel.
+  // }
+
 }

@@ -16,23 +16,32 @@ export class DashboardController {
   //   - daily spending and income
   //   - each category spending
   // 5.
-  @Get()
-  getSummary(
+  @Get("/summary")
+  getTotalSummary(
     @Query() query
   ) {
-    return this.dashboardService.getSummary(query);
+    return this.dashboardService.getTotalSummary(query);
   }
 
 
-  // 등록된 모든 종류 계좌
-  @Get()
-  findAllAccounts(
-
+  @Get('/category-summary')
+  getCategorySummary(
+    @Query() query
   ) {
-
+    return this.dashboardService.getCategorySummary(query);
   }
 
+  @Get('/category-summary')
+  findAllAccounts(
+    @Query() query
+  ) {
+    return this.dashboardService.getCategorySummary(query);
+  }
 
+  @Get('/type-summary')
+  getTypeSummary() {
+    return this.dashboardService.getTypeSummary()
+  }
   // find all registered accounts
   // monthly spendingSummary
   // - category

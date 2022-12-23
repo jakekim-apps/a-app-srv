@@ -14,10 +14,20 @@ export class DashboardService {
   ) {}
 
 
-  async getSummary(queryParams) {
+  async getTotalSummary(queryParams) {
     const { startDate, endDate } = queryParams;
+    // total reve, spen
+    // monthly
+    return this.historyService.getTotalSummary()
 
   }
 
+  async getCategorySummary(q) {
+    return this.historyService.getCategorySummary()
+  }
+
+  async getTypeSummary() {
+    return this.historyService.getTypeSummary()
+  }
 
 }
